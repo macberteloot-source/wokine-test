@@ -1,0 +1,788 @@
+/**
+ * Template « Test Wokine » — intégration de la maquette Figma (page d'accueil, 1440 px).
+ 
+ * Tout est préfixé « wt- » pour ne pas entrer en conflit avec le thème.
+ * Les valeurs fluides utilisent clamp() : identiques à la maquette à 1440 px,
+ * elles se réduisent progressivement sur les écrans plus étroits.
+ */
+
+/* ==========================================================================
+   1. Polices et variables
+   ========================================================================== */
+
+@font-face {
+	font-family: "Anton";
+	src: url("../fonts/anton-400.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Inter";
+	src: url("../fonts/inter-600.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Inter";
+	src: url("../fonts/inter-700.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+.wt {
+	/* Couleurs de la maquette */
+	--wt-marine: #000e2b;
+	--wt-bleu: #02399f;
+	--wt-petrole: #0c4b78;
+	--wt-ardoise: #3d4450;
+	--wt-ciel: #ebf2f6;
+	--wt-rose: #e98ce3;
+	--wt-blanc: #fff;
+	--wt-voile: rgba(0, 14, 43, .5);
+
+	/* Typographies */
+	--wt-satoshi: "Satoshi", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--wt-anton: "Anton", Impact, "Arial Narrow", sans-serif;
+	--wt-inter: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+	/* Espacements : 6 px de marge autour des blocs arrondis, comme dans la maquette */
+	--wt-marge: 6px;
+	--wt-rayon: 24px;
+	--wt-gouttiere: clamp(20px, 7.92vw, 114px);
+}
+
+/* ==========================================================================
+   2. Base
+   ========================================================================== */
+
+.wt {
+	margin: 0;
+	background: var(--wt-blanc);
+	color: var(--wt-marine);
+	font-family: var(--wt-satoshi);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+.wt *,
+.wt *::before,
+.wt *::after {
+	box-sizing: border-box;
+}
+
+/* :where() garde une spécificité nulle : ces remises à zéro ne gênent aucun composant. */
+.wt-page :where(img) {
+	display: block;
+	max-width: 100%;
+}
+
+.wt-page :where(h1, h2, h3, p, ul) {
+	margin: 0;
+}
+
+.wt-page a {
+	color: inherit;
+}
+
+.wt-page :focus-visible {
+	outline: 2px solid var(--wt-bleu);
+	outline-offset: 3px;
+}
+
+.wt .screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ==========================================================================
+   3. Composants partagés
+   ========================================================================== */
+
+/* Bouton primaire (« Contactez-nous », « Tous nos produits ») */
+.wt-bouton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 16px 28px;
+	border-radius: 33px;
+	background: var(--wt-petrole);
+	color: var(--wt-blanc) !important;
+	font-family: var(--wt-satoshi);
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 22px;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background-color .2s ease, transform .2s ease;
+}
+
+.wt-bouton:hover {
+	background: var(--wt-marine);
+}
+
+.wt-bouton:active {
+	transform: translateY(1px);
+}
+
+/* Lien « Voir plus » souligné avec chevron */
+.wt-lien {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding-bottom: 4px;
+	border-bottom: 1px solid currentColor;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 1.2;
+	letter-spacing: -.04em;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.wt-lien img {
+	width: 6.564px;
+	height: 12.718px;
+	transition: transform .2s ease;
+}
+
+.wt-lien:hover img {
+	transform: translateX(4px);
+}
+
+/* Titres en dégradé marine → bleu → marine */
+.wt-degrade {
+	background: linear-gradient(90deg, var(--wt-marine) 0%, var(--wt-bleu) 41%, var(--wt-marine) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: var(--wt-marine);
+}
+
+/* Bloc arrondi sur fond ciel (solutions, nouveautés) */
+.wt-bloc {
+	padding: var(--wt-marge);
+}
+
+.wt-bloc__fond {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--wt-rayon);
+	background: var(--wt-ciel);
+}
+
+/* ==========================================================================
+   4. Sections
+   ========================================================================== */
+
+/* ---------- Hero ---------- */
+
+.wt-hero {
+	padding: 5px var(--wt-marge) var(--wt-marge);
+}
+
+.wt-hero__cadre {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: clamp(520px, 59.24vw, 853px);
+	overflow: hidden;
+	border-radius: var(--wt-rayon);
+	background: var(--wt-marine);
+}
+
+.wt-hero__image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100% !important;
+	max-width: none !important;
+	object-fit: cover;
+}
+
+.wt-hero__cadre::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: var(--wt-voile);
+}
+
+.wt-hero__contenu {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 53.5px;
+	width: 100%;
+	max-width: calc(687px + 48px);
+	/* Dans la maquette, le bloc est légèrement au-dessus du centre. */
+	margin-top: -59px;
+	padding: 0 24px;
+	color: var(--wt-blanc);
+	text-align: center;
+}
+
+.wt-logo {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-family: var(--wt-inter);
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 1;
+}
+
+.wt-logo img {
+	width: 12px;
+	height: 26px;
+}
+
+.wt-hero__titre {
+	font-family: var(--wt-anton);
+	font-weight: 400;
+	font-size: clamp(36px, 4.375vw, 63px);
+	line-height: 1;
+	letter-spacing: -.02em;
+	text-transform: uppercase;
+}
+
+/* ---------- Introduction ---------- */
+
+.wt-intro {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: start;
+	gap: 60px;
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: clamp(64px, 8.4vw, 121px) clamp(24px, 8.33vw, 120px) clamp(64px, 8.6vw, 124px);
+}
+
+.wt-intro__titre {
+	font-weight: 700;
+	font-size: clamp(36px, 3.89vw, 56px);
+	line-height: 1;
+	letter-spacing: -.04em;
+}
+
+.wt-intro__corps {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+.wt-intro__texte {
+	color: var(--wt-ardoise);
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 1.5;
+}
+
+/* ---------- Solutions ---------- */
+
+.wt-solutions .wt-bloc__fond {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 60px;
+	padding: 80px 24px;
+}
+
+/* Formes floues décoratives (positions relevées dans la maquette, en % du bloc) */
+.wt-solutions__deco {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.wt-deco {
+	position: absolute;
+}
+
+/* L'image déborde de son cadre (marge du flou), comme dans Figma : -9,17 % / -5,57 %. */
+.wt-deco img {
+	position: absolute;
+	top: -9.17%;
+	left: -5.57%;
+	width: 111.14%;
+	height: 118.34% !important;
+	max-width: none !important;
+}
+
+.wt-deco--vague-1 {
+	inset: 11.79% 41.76% 6.69% -27.87%;
+}
+
+.wt-deco--vague-2 {
+	inset: 4.69% -43.05% 13.78% 56.93%;
+	transform: scaleY(-1);
+	mix-blend-mode: multiply;
+}
+
+.wt-deco--rectangle {
+	left: 56.93%;
+	top: 51.2%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 597px;
+	height: 428px;
+}
+
+.wt-deco--rectangle > div {
+	position: relative;
+	flex: none;
+	width: 349px;
+	height: 406px;
+	transform: rotate(-129.93deg) skewX(-16.73deg) scaleY(-.96);
+}
+
+.wt-deco--rectangle img {
+	top: -33.28%;
+	left: -38.72%;
+	width: 177.44%;
+	height: 166.56% !important;
+}
+
+.wt-solutions__titre {
+	position: relative;
+	max-width: 812px;
+	font-weight: 700;
+	font-size: clamp(32px, 3.33vw, 48px);
+	line-height: 1.2;
+	letter-spacing: -.04em;
+	text-align: center;
+}
+
+.wt-solutions__grille {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+	width: 100%;
+	max-width: 964px;
+}
+
+.wt-carte {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 24px;
+	min-height: 289px;
+	padding: 40px;
+	overflow: hidden;
+	border-radius: 16px;
+}
+
+.wt-carte--large {
+	grid-column: 1 / -1;
+	justify-content: flex-start;
+	min-height: 275px;
+}
+
+.wt-carte--marine {
+	background: var(--wt-marine);
+	color: var(--wt-ciel);
+}
+
+.wt-carte--image {
+	color: var(--wt-blanc);
+	background: var(--wt-marine);
+}
+
+.wt-carte--rose {
+	background: var(--wt-rose);
+	color: var(--wt-marine);
+}
+
+.wt-carte__haut {
+	display: flex;
+	gap: 40px;
+	min-height: 148px;
+}
+
+.wt-carte__titre-large {
+	flex: 0 0 273px;
+	font-family: var(--wt-anton);
+	font-weight: 400;
+	font-size: clamp(36px, 3.6vw, 52px);
+	line-height: 1.1;
+	letter-spacing: -.04em;
+	text-transform: uppercase;
+}
+
+.wt-carte__texte {
+	flex: 1;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.wt-carte__titre {
+	position: relative;
+	max-width: 301px;
+	font-weight: 700;
+	font-size: clamp(24px, 2.22vw, 32px);
+	line-height: 1.2;
+	letter-spacing: -.04em;
+}
+
+.wt-carte .wt-lien {
+	position: relative;
+	align-self: flex-start;
+}
+
+/* Carte avec photo : image en fond + voile marine à 50 % */
+.wt-carte__fond {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100% !important;
+	object-fit: cover;
+	transition: transform .6s ease;
+}
+
+.wt-carte--image::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: var(--wt-voile);
+}
+
+.wt-carte--image > :not(.wt-carte__fond) {
+	z-index: 2;
+}
+
+.wt-carte--image:hover .wt-carte__fond {
+	transform: scale(1.04);
+}
+
+/* ---------- Nos dernières nouveautés ---------- */
+
+.wt-produits .wt-bloc__fond {
+	padding: 120px 0 75px;
+}
+
+.wt-produits__tete {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	min-height: 62px;
+	padding: 0 var(--wt-gouttiere);
+}
+
+.wt-produits__titre {
+	max-width: 644px;
+	font-weight: 700;
+	font-size: clamp(32px, 3.33vw, 48px);
+	line-height: 1.2;
+	letter-spacing: -.04em;
+}
+
+/* Piste du carrousel : défilement natif + aimantation, sans librairie */
+.wt-produits__liste {
+	display: flex;
+	gap: 6px;
+	margin-top: 72px;
+	padding: 0 var(--wt-gouttiere);
+	list-style: none;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	scroll-snap-type: x mandatory;
+	scroll-padding-inline: var(--wt-gouttiere);
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+}
+
+.wt-produits__liste::-webkit-scrollbar {
+	display: none;
+}
+
+/* Espace de fin : la dernière carte peut s'aligner sur la gouttière de gauche. */
+.wt-produits__liste::after {
+	content: "";
+	flex: 0 0 1px;
+}
+
+.wt-produit {
+	position: relative;
+	display: flex;
+	flex: 0 0 266.667px;
+	flex-direction: column;
+	align-items: center;
+	gap: 17.778px;
+	min-height: 406.333px;
+	padding: 5px 0;
+	border-radius: 8px;
+	scroll-snap-align: start;
+}
+
+.wt-produit__visuel {
+	position: relative;
+	width: 256.667px;
+	aspect-ratio: 1;
+	overflow: hidden;
+	border-radius: 8px;
+	background: var(--wt-blanc);
+}
+
+.wt-produit__visuel > img {
+	width: 100%;
+	height: 100% !important;
+	object-fit: cover;
+	transition: transform .4s ease;
+}
+
+.wt-produit:hover .wt-produit__visuel > img {
+	transform: scale(1.04);
+}
+
+.wt-produit__badge {
+	position: absolute;
+	top: 13px;
+	left: 13px;
+	display: inline-flex;
+	align-items: center;
+	padding: 7px 8px;
+	border-radius: 26px;
+	background: var(--wt-rose);
+	color: var(--wt-marine);
+	font-weight: 700;
+	font-size: 10px;
+	line-height: 1;
+}
+
+/* « Télécharger la fiche technique » : masqué dans la maquette (opacité 0),
+   il apparaît au survol ou au focus de la carte. */
+.wt-produit__fiche {
+	position: absolute;
+	z-index: 2;
+	left: 24.44px;
+	top: 216.67px;
+	display: inline-flex;
+	align-items: flex-start;
+	gap: 5.556px;
+	padding: 11.111px 16.667px;
+	border-radius: 55.556px;
+	background: var(--wt-ciel);
+	color: #000 !important;
+	font-family: var(--wt-inter);
+	font-weight: 600;
+	font-size: 11.111px;
+	line-height: normal;
+	text-decoration: none;
+	white-space: nowrap;
+	opacity: 0;
+	transform: translateY(6px);
+	transition: opacity .25s ease, transform .25s ease;
+}
+
+.wt-produit__fiche img {
+	width: 15.556px;
+	height: 15.556px;
+}
+
+.wt-produit:hover .wt-produit__fiche,
+.wt-produit:focus-within .wt-produit__fiche {
+	opacity: 1;
+	transform: none;
+}
+
+.wt-produit__infos {
+	display: flex;
+	flex-direction: column;
+	gap: 8.889px;
+	width: 209px;
+}
+
+.wt-produit__titre {
+	font-weight: 700;
+	font-size: 16.22px;
+	line-height: 1.1;
+	letter-spacing: -.02em;
+}
+
+.wt-produit__titre a {
+	text-decoration: none;
+}
+
+/* Toute la carte est cliquable, sauf le bouton « fiche technique » qui reste au-dessus. */
+.wt-produit__titre a::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	border-radius: 8px;
+}
+
+.wt-produit__texte {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--wt-ardoise);
+	font-weight: 400;
+	font-size: 14px;
+	line-height: normal;
+	opacity: .7;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+
+.wt-produits__fleches {
+	display: flex;
+	justify-content: flex-end;
+	/* Les flèches débordent légèrement sur le bas des cartes, comme dans la maquette. */
+	margin-top: -12px;
+	padding-right: 46px;
+}
+
+.wt-fleche {
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	cursor: pointer;
+	transition: background-color .2s ease, opacity .2s ease;
+}
+
+.wt-fleche img {
+	width: 18px;
+	height: 18px;
+}
+
+.wt-fleche__miroir {
+	transform: scaleX(-1);
+}
+
+.wt-fleche:hover:not(:disabled) {
+	background: rgba(0, 14, 43, .06);
+}
+
+/* Flèche inactive (début ou fin du carrousel) : 60 % d'opacité, comme dans la maquette. */
+.wt-fleche:disabled {
+	opacity: .6;
+	cursor: default;
+}
+
+/* ==========================================================================
+   5. Points de rupture
+   La maquette est en 1440 px. Choix pour les tailles intermédiaires :
+   - entre 1440 et 900 px : tailles fluides (clamp) ;
+   - ≤ 900 px  : l'introduction passe sur une colonne ;
+   - ≤ 767 px  : cartes « solutions » empilées, en-tête des nouveautés en colonne,
+                 bouton « fiche technique » toujours visible (pas de survol au doigt).
+   ========================================================================== */
+
+@media (max-width: 900px) {
+	.wt-intro {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+
+	.wt-carte__haut {
+		gap: 24px;
+	}
+
+	.wt-carte__titre-large {
+		flex-basis: 200px;
+	}
+}
+
+@media (max-width: 767px) {
+	.wt {
+		--wt-rayon: 16px;
+	}
+
+	.wt-solutions .wt-bloc__fond {
+		gap: 40px;
+		padding: 56px 16px;
+	}
+
+	.wt-solutions__grille {
+		grid-template-columns: 1fr;
+	}
+
+	.wt-carte {
+		min-height: 240px;
+		padding: 28px;
+	}
+
+	.wt-carte__haut {
+		flex-direction: column;
+		min-height: 0;
+	}
+
+	.wt-carte__titre-large {
+		flex-basis: auto;
+	}
+
+	.wt-produits .wt-bloc__fond {
+		padding: 64px 0 48px;
+	}
+
+	.wt-produits__tete {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.wt-produits__liste {
+		margin-top: 40px;
+	}
+
+	.wt-produits__fleches {
+		padding-right: 12px;
+	}
+
+	.wt-produit {
+		flex-basis: 240px;
+	}
+
+	.wt-produit__visuel {
+		width: 230px;
+	}
+
+	.wt-produit__fiche {
+		top: auto;
+		bottom: 12px;
+		left: 12px;
+	}
+}
+
+/* Écrans tactiles : pas de survol, le bouton « fiche technique » reste visible. */
+@media (hover: none) {
+	.wt-produit__fiche {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wt-page *,
+	.wt-page *::before,
+	.wt-page *::after {
+		transition-duration: 0s !important;
+		scroll-behavior: auto !important;
+	}
+}
